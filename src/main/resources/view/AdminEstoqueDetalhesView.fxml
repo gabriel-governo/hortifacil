@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.hortifacil.controller.AdminEstoqueDetalhesController"
+            stylesheets="@/css/style.css"
+            prefWidth="800" prefHeight="600">
+
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="20" styleClass="top-bar">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+            <Button text="Fechar" onAction="#fechar" styleClass="button-exit"/>
+            <Label fx:id="lblTituloProduto" text="Detalhes do Produto" styleClass="title-label"/>
+        </HBox>
+    </top>
+
+    <center>
+        <TableView fx:id="tvDetalhesLotes" prefWidth="700" prefHeight="500">
+            <columns>
+                <TableColumn fx:id="colLote" text="Lote" prefWidth="80"/>
+                <TableColumn fx:id="colQuantidade" text="Quantidade" prefWidth="100"/>
+                <TableColumn fx:id="colDataColheita" text="Data Colheita" prefWidth="150"/>
+                <TableColumn fx:id="colDataValidade" text="Data Validade" prefWidth="150"/>
+            </columns>
+        </TableView>
+    </center>
+</BorderPane>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.hortifacil.controller.ClienteAssinaturaNovaController"
+            stylesheets="@/css/style.css"
+            prefWidth="800" prefHeight="650">
+
+    <!-- Topo -->
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="10" styleClass="top-bar" 
+            style="-fx-padding: 10; -fx-background-color: white;">
+            <!-- Botão Voltar -->
+            <Button text="Voltar" onAction="#voltarAssinatura" styleClass="button-exit"/>
+
+            <!-- Título central -->
+            <Label text="ASSINATURAS DE PRODUTOS DE HORTIFRUTI" alignment="CENTER"
+                style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+
+            <!-- Espaço flexível para empurrar elementos à direita se necessário -->
+            <Region HBox.hgrow="ALWAYS"/>
+        </HBox>
+    </top>
+
+    <!-- Centro -->
+    <center>
+        <ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED">
+            <VBox spacing="1" alignment="TOP_CENTER" style="-fx-padding: 20;" fillWidth="true">
+            
+                <Label text="Confira as assinaturas e economize já!"
+                       style="-fx-font-size: 16px;" />
+
+                <!-- FlowPane para cards clicáveis -->
+                <FlowPane fx:id="containerAssinaturas"
+                          hgap="20" vgap="20"
+                          alignment="CENTER"
+                          prefWrapLength="760"
+                          prefHeight="500"
+                          minHeight="500"
+                          style="-fx-background-color: #e3f2d8; -fx-padding: 15;"
+                          VBox.vgrow="ALWAYS"/>
+            </VBox>
+        </ScrollPane>
+    </center>
+</BorderPane>

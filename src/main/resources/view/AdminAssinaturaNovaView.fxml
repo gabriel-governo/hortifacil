@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.hortifacil.controller.AdminAssinaturaNovaController"
+      spacing="15" alignment="TOP_LEFT"
+      styleClass="root-pane"
+      stylesheets="@/css/style.css"
+      prefWidth="800" prefHeight="600">
+
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+    <!-- Cabeçalho com Voltar e título -->
+    <HBox spacing="10" alignment="CENTER" prefWidth="700">
+        <Button text="Voltar" fx:id="btnVoltar" onAction="#voltarAdmin" styleClass="button-exit"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Label text="Cadastrar / Editar Assinatura" styleClass="title-label"/>
+        <Region HBox.hgrow="ALWAYS"/>
+    </HBox>
+
+    <!-- Nome do plano -->
+    <VBox spacing="5" alignment="TOP_LEFT" prefWidth="700">
+        <Label text="Nome do Plano"/>
+        <TextField fx:id="txtNome" promptText="Digite o nome da assinatura" prefWidth="700"/>
+    </VBox>
+
+    <!-- Valor do plano -->
+    <VBox spacing="5" alignment="TOP_LEFT" prefWidth="700">
+        <Label text="Valor (R$)"/>
+        <TextField fx:id="txtValor" promptText="Digite o valor do plano" prefWidth="200"/>
+    </VBox>
+
+    <!-- Frequência -->
+    <VBox spacing="5" alignment="TOP_LEFT" prefWidth="700">
+        <Label text="Frequência"/>
+        <ComboBox fx:id="comboFrequencia" prefWidth="200"/>
+    </VBox>
+
+    <!-- Quantidade de Produtos -->
+    <VBox spacing="5" alignment="TOP_LEFT" prefWidth="700">
+        <Label text="Quantidade de Produtos"/>
+        <TextField fx:id="txtQuantidadeProdutos" promptText="Digite a quantidade de produtos incluídos" prefWidth="200"/>
+    </VBox>
+
+    <!-- Descrição -->
+    <VBox spacing="5" alignment="TOP_LEFT" prefWidth="700">
+        <Label text="Descrição"/>
+        <TextArea fx:id="txtDescricao" wrapText="true" prefRowCount="6" prefWidth="700"/>
+    </VBox>
+
+    <!-- Botões -->
+    <HBox spacing="10" alignment="CENTER_RIGHT" prefWidth="700">
+        <Button fx:id="btnExcluir" text="Excluir" onAction="#excluirModelo" visible="false" styleClass="button-red"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button text="Salvar" onAction="#salvarModelo" styleClass="button-green"/>
+    </HBox>
+
+</VBox>

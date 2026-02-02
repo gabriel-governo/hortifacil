@@ -11,7 +11,7 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <java.version>21</java.version> <!-- adicione esta propriedade -->
+    <java.version>21</java.version>
     <javafx.version>21.0.7</javafx.version>
   </properties>
 
@@ -35,23 +35,41 @@
       <version>8.0.33</version>
     </dependency>
 
-    <!-- BCrypt para criptografia de senhas -->
+    <!-- BCrypt -->
     <dependency>
       <groupId>org.mindrot</groupId>
       <artifactId>jbcrypt</artifactId>
       <version>0.4</version>
     </dependency>
+
+    <!-- ZXing -->
+    <dependency>
+      <groupId>com.google.zxing</groupId>
+      <artifactId>core</artifactId>
+      <version>3.5.1</version>
+    </dependency>
+    <dependency>
+      <groupId>com.google.zxing</groupId>
+      <artifactId>javase</artifactId>
+      <version>3.5.1</version>
+    </dependency>
+
+  <dependency>
+    <groupId>org.openjfx</groupId>
+    <artifactId>javafx-swing</artifactId>
+    <version>${javafx.version}</version>
+</dependency>
+
   </dependencies>
 
   <build>
-<resources>
-  <resource>
-    <directory>src/main/resources</directory>
-  </resource>
-</resources>
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+      </resource>
+    </resources>
 
     <plugins>
-      <!-- Compilador Java com release para compatibilidade -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
@@ -63,7 +81,6 @@
         </configuration>
       </plugin>
 
-      <!-- Plugin JavaFX com caminho para SDK -->
       <plugin>
         <groupId>org.openjfx</groupId>
         <artifactId>javafx-maven-plugin</artifactId>
@@ -87,5 +104,6 @@
       </plugin>
     </plugins>
   </build>
+
 
 </project>

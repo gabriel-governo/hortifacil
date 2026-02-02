@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.hortifacil.controller.ClienteAssinaturaController"
+            prefWidth="950" prefHeight="700"
+            styleClass="root-pane">
+
+    <!-- TOPO: ações e informações da assinatura -->
+    <top>
+        <VBox spacing="10" styleClass="header-pane">
+        <padding>
+            <Insets top="10" right="10" bottom="10" left="10"/>
+        </padding>
+            <!-- Linha superior: título e ações -->
+            <HBox spacing="15" alignment="CENTER_LEFT">
+                <Button fx:id="btnVoltar" text="Voltar" onAction="#voltarHome" styleClass="button-exit" prefWidth="100" prefHeight="40"/>
+                <Label text="Minha Assinatura" styleClass="title-label"/>
+                <Pane HBox.hgrow="ALWAYS"/>
+                <Button fx:id="btnAlterar" text="Alterar Plano" onAction="#abrirTelaAlterarPlano" disable="true"
+                        styleClass="button-exit" prefWidth="160" prefHeight="40"/>
+                <Button fx:id="btnCancelar" text="Cancelar Assinatura" onAction="#cancelarAssinatura" disable="true"
+                        styleClass="button-exit" prefWidth="190" prefHeight="40"/>
+            </HBox>
+
+            <!-- Linha info assinatura -->
+            <HBox spacing="15" alignment="CENTER_LEFT">
+                <Label fx:id="lblNomeAssinatura" text="Plano: Sem assinatura" style="-fx-font-size: 18px;"/>
+                <Label fx:id="lblFrequencia" text="Frequência: -" style="-fx-font-size: 18px;"/>
+                <Label fx:id="lblHorarioEntrega" text="Horário entrega: -" style="-fx-font-size: 18px;"/>
+                <Pane HBox.hgrow="ALWAYS"/>
+                <Button fx:id="btnAgendarEntrega" text="Agendar Entrega" onAction="#agendarEntrega" disable="true"
+                        styleClass="button-green" prefWidth="190" prefHeight="40"/>
+            </HBox>
+
+            <Separator/>
+        </VBox>
+    </top>
+
+    <!-- CENTRO: pedidos da assinatura -->
+    <center>
+        <VBox spacing="10" alignment="TOP_CENTER" style="-fx-padding: 20;">
+            <Label text="Pedidos da Assinatura" styleClass="section-title"/>
+            
+            <ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED"
+                        style="-fx-background-color: transparent;">
+                <VBox fx:id="pedidosBox" spacing="10" alignment="TOP_CENTER" styleClass="content-box">
+                    <!-- Aqui os cards de pedidos serão adicionados dinamicamente -->
+                    <Label fx:id="lblPlaceholderPedidos" text="Nenhum pedido gerado ainda." styleClass="placeholder-label"/>
+                </VBox>
+            </ScrollPane>
+        </VBox>
+    </center>
+</BorderPane>

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.chart.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.hortifacil.controller.AdminRelatorioController">
+
+    <!-- Topo: Resumo e filtros -->
+    <top>
+        <VBox spacing="10" style="-fx-padding: 15; -fx-background-color: #f5f5f5;">
+            <HBox spacing="25" alignment="CENTER_LEFT">
+                <Label text="Usuários:"/>
+                <Label fx:id="lblUsuarios" style="-fx-font-weight: bold;"/>
+                <Label text="Assinaturas Ativas:"/>
+                <Label fx:id="lblAssinaturas" style="-fx-font-weight: bold;"/>
+                <Label text="Lucro (período):"/>
+                <Label fx:id="lblLucro" style="-fx-font-weight: bold;"/>
+            </HBox>
+        </VBox>
+    </top>
+
+    <!-- Centro: abas dos relatórios -->
+    <center>
+        <TabPane tabClosingPolicy="UNAVAILABLE">
+            <!-- Produtos Vencidos -->
+            <Tab text="Produtos Vencidos">
+                <TableView fx:id="tabelaProdutosVencidos">
+                    <columns>
+                        <TableColumn fx:id="colId" text="ID" prefWidth="80"/>
+                        <TableColumn fx:id="colProduto" text="Produto" prefWidth="180"/>
+                        <TableColumn fx:id="colQuantidade" text="Quantidade" prefWidth="120"/>
+                        <TableColumn fx:id="colValidade" text="Validade" prefWidth="150"/>
+                        <TableColumn fx:id="colLote" text="Lote" prefWidth="100"/>
+                        <TableColumn fx:id="colDescartar" text="Ação" prefWidth="180"/>
+                    </columns>
+                </TableView>
+            </Tab>
+
+            <!-- Produtos Mais Vendidos -->
+            <Tab text="Mais Vendidos">
+                <VBox alignment="CENTER" spacing="10" style="-fx-padding: 20;">
+                    <Label text="Top Produtos Mais Vendidos" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+                    <BarChart fx:id="graficoMaisVendidos" prefHeight="400" prefWidth="600">
+                        <xAxis>
+                            <CategoryAxis label="Produto"/>
+                        </xAxis>
+                        <yAxis>
+                            <NumberAxis label="Quantidade"/>
+                        </yAxis>
+                    </BarChart>
+                </VBox>
+            </Tab>
+
+            <!-- Baixo Estoque -->
+            <Tab text="Baixo Estoque">
+                <TableView fx:id="tabelaBaixoEstoque">
+                    <columns>
+                        <TableColumn fx:id="colIdEstoque" text="ID" prefWidth="140"/>
+                        <TableColumn fx:id="colProdutoEstoque" text="Produto" prefWidth="180" />
+                        <TableColumn fx:id="colQuantidadeEstoque" text="Quantidade" prefWidth="130"/>
+                        <TableColumn fx:id="colValidadeEstoque" text="Validade" prefWidth="180"/>
+                        <TableColumn fx:id="colLoteEstoque" text="Lote" prefWidth="130"/>
+                    </columns>
+                </TableView>
+            </Tab>
+
+            <!-- Próximos a Vencer -->
+            <Tab text="Próximos a Vencer">
+                <TableView fx:id="tabelaProximosVencer">
+                    <columns>
+                        <TableColumn fx:id="colIdProximo" text="ID" prefWidth="140"/>
+                        <TableColumn fx:id="colProdutoProximo" text="Produto" prefWidth="180"/>
+                        <TableColumn fx:id="colQuantidadeProximo" text="Quantidade" prefWidth="130"/>
+                        <TableColumn fx:id="colValidadeProximo" text="Validade" prefWidth="180"/>
+                        <TableColumn fx:id="colLoteProximo" text="Lote" prefWidth="130" />
+                    </columns>
+                </TableView>
+            </Tab>
+
+            <!-- Pedidos por Status -->
+            <Tab text="Pedidos por Status">
+                <BarChart fx:id="graficoPedidosPorStatus" prefHeight="400" prefWidth="600">
+                    <xAxis>
+                        <CategoryAxis label="Status"/>
+                    </xAxis>
+                    <yAxis>
+                        <NumberAxis label="Quantidade"/>
+                    </yAxis>
+                </BarChart>
+            </Tab>
+        </TabPane>
+    </center>
+
+    <bottom>
+        <HBox alignment="CENTER_RIGHT" style="-fx-padding: 15;">
+            <Button fx:id="btnVoltar"
+                    text="Voltar"
+                    prefWidth="200"
+                    styleClass="button-exit"
+                    onAction="#voltarHomeAdmin"/>
+        </HBox>
+    </bottom>
+
+</BorderPane>

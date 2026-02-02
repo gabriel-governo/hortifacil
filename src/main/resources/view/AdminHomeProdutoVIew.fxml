@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.hortifacil.controller.AdminHomeProdutoController"
+      spacing="20" alignment="CENTER"
+      prefWidth="400" prefHeight="400"
+      style="-fx-padding: 30;"
+      styleClass="root-pane">
+
+    <!-- TÍTULO -->
+    <Label text="Gerenciamento de Produtos"
+           style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+
+    <!-- SUBTÍTULO -->
+    <Label text="Escolha uma ação para gerenciar os produtos"
+           style="-fx-font-size: 14px; -fx-text-fill: #34495e;"/>
+
+    <!-- BOTÕES DE AÇÃO -->
+    <Button fx:id="btnAdicionarEstoque"
+            text="Adicionar Produtos ao Estoque"
+            prefWidth="250"
+            styleClass="button-green"
+            onAction="#abrirAdicionarEstoque"/>
+
+    <Button fx:id="btnEstoqueAtual"
+            text="Estoque Atual"
+            prefWidth="250"
+            styleClass="button-green"
+            onAction="#abrirEstoqueAtual"/>
+
+    <Button fx:id="btnCadastroProdutos"
+            text="Cadastro de Produtos"
+            prefWidth="250"
+            styleClass="button-green"
+            onAction="#abrirCadastroProdutos"/>
+
+    <!-- BOTÃO DE VOLTAR -->
+    <Button fx:id="btnVoltar"
+            text="Voltar"
+            prefWidth="250"
+            styleClass="button-exit"
+            onAction="#voltarHome"/>
+</VBox>

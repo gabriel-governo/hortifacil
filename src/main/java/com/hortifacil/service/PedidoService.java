@@ -155,14 +155,16 @@ public class PedidoService {
         double total = itens.stream().mapToDouble(i -> i.getQuantidade() * i.getPrecoUnitario()).sum();
         Pedido pedido = new Pedido(clienteId, LocalDate.now(), total, "FINALIZADO", true);
 
-        int idPedido = pedidoDAO.salvarPedido(pedido, conn);   // método deve aceitar Connection
+        int idPedido = pedidoDAO.salvarPedido(pedido);
+        pedidoDAO.salvarItensPedido(idPedido, itens);
+ 
         if (idPedido == -1) {
             System.out.println("Falha ao salvar pedido.");
             conn.rollback();
             return false;
         }
 
-        pedidoDAO.salvarItensPedido(idPedido, itens, conn);
+        pedidoDAO.salvarItensPedido(idPedido, itens);
 
         conn.commit();
         return true;
@@ -202,17 +204,26 @@ public List<CarrinhoProduto> buscarItensPedido(int idPedido) {
 }
 
 public int criarPedidoRetornaId(Connection connection, int clienteId, List<CarrinhoProduto> itens) throws SQLException {
-    String sqlPedido = "INSERT INTO pedido (id_cliente, data_pedido, status) VALUES (?, NOW(), 'EM_ANDAMENTO')";
+    // Calcula o total do pedido
+    double total = itens.stream()
+                        .mapToDouble(i -> i.getQuantidade() * i.getPrecoUnitario())
+                        .sum();
+
+    // Adiciona o total na query de inserção
+    String sqlPedido = "INSERT INTO pedido (id_cliente, data_pedido, status, total) VALUES (?, NOW(), 'EM_ANDAMENTO', ?)";
     String sqlItem = "INSERT INTO pedido_produto (id_pedido, id_produto, quantidade, preco_unitario) VALUES (?, ?, ?, ?)";
 
     connection.setAutoCommit(false);
     int pedidoId = -1;
 
+    // Inserção do pedido
     try (PreparedStatement stmtPedido = connection.prepareStatement(sqlPedido, Statement.RETURN_GENERATED_KEYS)) {
         stmtPedido.setInt(1, clienteId);
+        stmtPedido.setDouble(2, total); // seta o total
         int affectedRows = stmtPedido.executeUpdate();
 
-        if (affectedRows == 0) throw new SQLException("Falha ao criar pedido, nenhuma linha afetada.");
+        if (affectedRows == 0) 
+            throw new SQLException("Falha ao criar pedido, nenhuma linha afetada.");
 
         try (ResultSet generatedKeys = stmtPedido.getGeneratedKeys()) {
             if (generatedKeys.next()) {
@@ -223,11 +234,12 @@ public int criarPedidoRetornaId(Connection connection, int clienteId, List<Carri
         }
     }
 
+    // Inserção dos itens do pedido
     try (PreparedStatement stmtItem = connection.prepareStatement(sqlItem)) {
         for (CarrinhoProduto item : itens) {
             stmtItem.setInt(1, pedidoId);
             stmtItem.setInt(2, item.getProduto().getId());
-            stmtItem.setInt(3, item.getQuantidade()); // se for int mesmo
+            stmtItem.setInt(3, item.getQuantidade());
             stmtItem.setDouble(4, item.getPrecoUnitario());
             stmtItem.addBatch();
         }
@@ -237,6 +249,33 @@ public int criarPedidoRetornaId(Connection connection, int clienteId, List<Carri
     connection.commit();
     connection.setAutoCommit(true);
     return pedidoId;
+}
+
+public double calcularTotalDoPedido(int idPedido) {
+    double total = 0;
+    try (Connection conn = DatabaseConnection.getConnection()) {
+        String sql = "SELECT quantidade, preco_unitario FROM pedido_produto WHERE id_pedido = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, idPedido);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                total += rs.getInt("quantidade") * rs.getDouble("preco_unitario");
+            }
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return total;
+}
+
+public void associarCartaoAoPedido(int pedidoId, int cartaoId) throws SQLException {
+    String sql = "UPDATE pedido SET id_cartao = ? WHERE id_pedido = ?"; // ou insere em pedido_cartao, se existir
+    try (Connection conn = DatabaseConnection.getConnection();
+         PreparedStatement stmt = conn.prepareStatement(sql)) {
+        stmt.setInt(1, cartaoId);
+        stmt.setInt(2, pedidoId);
+        stmt.executeUpdate();
+    }
 }
 
 }

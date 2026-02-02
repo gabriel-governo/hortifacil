@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.hortifacil.controller.ClienteSettingsController"
+            prefWidth="1000" prefHeight="700"
+            stylesheets="@/css/style.css"
+            style="-fx-background-color: #e3f2d8;"> <!-- Fundo consistente -->
+
+    <!-- Topo: botão voltar -->
+    <top>
+       <HBox alignment="CENTER_LEFT" spacing="20" style="-fx-padding: 10 10 10 10;" styleClass="top-bar">
+            <Button fx:id="btnVoltar" text="Voltar" onAction="#voltarHome" styleClass="button-exit"/>
+            <Label text="Configurações" styleClass="title-label"/>
+        </HBox>
+    </top>
+
+    <!-- Centro: ScrollPane com VBox para conteúdo -->
+    <center>
+        <ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" style="-fx-background-color: transparent;">
+            <content>
+                <VBox spacing="20" alignment="TOP_CENTER" style="-fx-padding: 20;">
+                    
+                    <!-- Alterar Login -->
+                    <Button text="Alterar Login" onAction="#toggleLogin" styleClass="button-green"/>
+                    <VBox fx:id="loginBox" spacing="10" visible="false" managed="false">
+                        <TextField fx:id="txtNovoLogin" promptText="Novo login"/>
+                        <Button text="Confirmar" onAction="#confirmarLogin" styleClass="button-green"/>
+                    </VBox>
+
+                    <!-- Alterar Endereço -->
+                    <Button text="Alterar Endereço" onAction="#toggleEndereco" styleClass="button-green"/>
+                    <VBox fx:id="enderecoBox" spacing="10" visible="false" managed="false">
+                        <TextField fx:id="txtNovoEndereco" promptText="Rua"/>
+                        <TextField fx:id="txtBairro" promptText="Bairro"/>
+                        <TextField fx:id="txtNumero" promptText="Número"/>
+                        <TextField fx:id="txtComplemento" promptText="Complemento"/>
+                        <Button text="Confirmar" onAction="#confirmarEndereco" styleClass="button-green"/>
+                    </VBox>
+
+                    <!-- Alterar Senha -->
+                    <Button text="Alterar Senha" onAction="#toggleSenha" styleClass="button-green"/>
+                    <VBox fx:id="senhaBox" spacing="10" visible="false" managed="false">
+                        <PasswordField fx:id="txtSenhaAtual" promptText="Senha atual"/>
+                        <PasswordField fx:id="txtSenhaNova" promptText="Nova senha"/>
+                        <PasswordField fx:id="txtSenhaConfirmar" promptText="Confirmar senha"/>
+                        <Button text="Confirmar" onAction="#confirmarSenha" styleClass="button-green"/>
+                    </VBox>
+                    <!-- Remover Cartões-->
+                    <Button text="Gerenciar Cartões" onAction="#toggleCartoes" styleClass="button-green"/>
+                    <VBox fx:id="cartoesBox" spacing="10" visible="false" managed="false">
+                        <ListView fx:id="listaCartoes" prefHeight="150"/>
+                        <Button text="Remover Cartão Selecionado" onAction="#removerCartaoSelecionado" styleClass="button-red"/>
+                    </VBox>
+
+                </VBox>
+            </content>
+        </ScrollPane>
+    </center>
+
+</BorderPane>

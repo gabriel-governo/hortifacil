@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.hortifacil.controller.AdminAdicionarEstoqueController"
+            prefWidth="1000" prefHeight="700"
+            styleClass="root-pane"
+            stylesheets="@/css/style.css">
+
+    <!-- Cabeçalho -->
+    <top>
+    <BorderPane prefHeight="60" style="-fx-padding: 10;">
+        <left>
+            <Button fx:id="btnVoltarHome" text="Voltar" prefWidth="120"
+                    styleClass="button-exit" onAction="#voltarHome"/>
+        </left>
+        <center>
+            <Label text="Adicionar Produtos - Admin" styleClass="title-label"/>
+        </center>
+    </BorderPane>
+</top>
+
+    <center>
+        <VBox spacing="20" alignment="TOP_LEFT" style="-fx-padding: 20;">
+            
+            <!-- Seleção e adição de produtos -->
+            <HBox spacing="20" alignment="CENTER_LEFT">
+                <ComboBox fx:id="cbProduto" prefWidth="300" promptText="Selecionar Produto"/>
+                <TextField fx:id="txtQuantidade" promptText="Quantidade" prefWidth="120"/>
+                <Button fx:id="btnAdicionar" text="Adicionar Produto" prefWidth="180" styleClass="button-green"/>
+            </HBox>
+
+            <Label fx:id="lblInfo" styleClass="error-label" wrapText="true" maxWidth="900"/>
+
+            <!-- Tabela de estoque -->
+            <TableView fx:id="tvEstoque" prefWidth="950" prefHeight="750">
+                <columns>
+                    <TableColumn fx:id="colProduto" text="Produto" prefWidth="170"/>
+                    <TableColumn fx:id="colQuantidade" text="Quantidade" prefWidth="110"/>
+                    <TableColumn fx:id="colDataColheita" text="Data Colhido" prefWidth="170"/>
+                    <TableColumn fx:id="colDataValidade" text="Data Validade" prefWidth="170"/>
+                    <TableColumn fx:id="colLote" text="Lote" prefWidth="100"/>
+                </columns>
+            </TableView>
+        </VBox>
+    </center>
+</BorderPane>

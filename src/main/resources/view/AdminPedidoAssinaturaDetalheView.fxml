@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.hortifacil.controller.AdminPedidoAssinaturaDetalheController"
+            prefWidth="800" prefHeight="600"
+            style="-fx-background-color: #e3f2d8;"
+            stylesheets="@/css/style.css">
+
+    <!-- Topo -->
+    <top>
+        <VBox spacing="5" style="-fx-padding: 15;">
+            <HBox spacing="20" alignment="CENTER_LEFT">
+                <Button fx:id="btnVoltar" text="Voltar" onAction="#handleVoltar" styleClass="button-exit"/>
+                <Label fx:id="lblTituloPedido" text="Assinatura #0" styleClass="title-label"/>
+            </HBox>
+
+            <VBox spacing="3" style="-fx-padding: 0 0 0 60;">
+                <Label fx:id="lblNomeCliente" text="Cliente: Fulano de Tal" style="-fx-font-size: 14pt;"/>
+                <Label fx:id="lblEnderecoCliente" text="Endereço: Rua X, nº Y" style="-fx-font-size: 12pt;"/>
+                <Label fx:id="lblStatus" text="Status: pendente" style="-fx-font-size: 12pt;"/>
+                <Label fx:id="lblEntregaAtual" text="Entrega: 1 / 4" style="-fx-font-size: 12pt;"/>
+            </VBox>
+        </VBox>
+    </top>
+
+    <!-- Centro: Produtos da assinatura -->
+    <center>
+        <ScrollPane fitToWidth="true" style="-fx-background-color: transparent;">
+            <VBox fx:id="produtosContainer"
+                  spacing="10"
+                  style="-fx-padding: 15;">
+                <!-- Os cards de produtos são adicionados dinamicamente pelo controller -->
+            </VBox>
+        </ScrollPane>
+    </center>
+
+    <!-- Rodapé: Botão de atualizar status -->
+    <bottom>
+        <HBox spacing="20" alignment="CENTER_RIGHT" style="-fx-padding: 15;">
+            <Button fx:id="btnAtualizarStatus" text="Marcar como Entregue" onAction="#handleAtualizarStatus" styleClass="button-primary"/>
+        </HBox>
+    </bottom>
+
+</BorderPane>

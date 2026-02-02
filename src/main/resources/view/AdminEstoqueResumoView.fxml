@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.hortifacil.controller.AdminEstoqueResumoController"
+            stylesheets="@/css/style.css"
+            prefWidth="1000" prefHeight="700">
+
+    <!-- Topo com faixa branca -->
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="20" styleClass="top-bar">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+            <Button fx:id="btnVoltar" text="Voltar" onAction="#voltar" styleClass="button-exit"/>
+            <Label text="Estoque Atual de Produtos" styleClass="title-label"/>
+        </HBox>
+    </top>
+
+    <!-- Centro com tabela -->
+    <center>
+        <TableView fx:id="tvResumoEstoque" prefWidth="900" prefHeight="500">
+            <columns>
+                <TableColumn fx:id="colProduto" text="Produto" prefWidth="170"/>
+                <TableColumn fx:id="colQuantidade" text="Quantidade" prefWidth="100"/>
+                <TableColumn fx:id="colValidade" text="Validade" prefWidth="150"/>
+                <TableColumn fx:id="colPreco" text="Preço" prefWidth="100"/>
+                <TableColumn fx:id="colDesconto" text="Desconto" prefWidth="100"/>
+                <TableColumn fx:id="colDetalhes" text="Detalhes" prefWidth="150"/> <!-- nova coluna -->
+            </columns>
+        </TableView>
+    </center>
+</BorderPane>

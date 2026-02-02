@@ -1,0 +1,93 @@
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.layout.Priority?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.Label?>
+
+<VBox xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.hortifacil.controller.ClienteHomeController"
+      spacing="25"
+      alignment="TOP_CENTER"
+      styleClass="root-pane"
+      style="-fx-padding: 30;">
+
+    <!-- Cabeçalho centralizado -->
+    <BorderPane prefHeight="50">
+    <!-- Texto centralizado -->
+    <center>
+        <Label fx:id="welcomeLabel"
+               text="Bem-vindo ao Hortifácil!"
+               style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
+    </center>
+    
+    <!-- Ícone de configurações no canto direito -->
+    <right>
+        <ImageView fx:id="settingsIcon"
+                   fitWidth="40" fitHeight="40"
+                   pickOnBounds="true"
+                   onMouseClicked="#abrirSettings">
+            <image>
+                <Image url="@/Imagens/settings.png"/>
+            </image>
+        </ImageView>
+    </right>
+</BorderPane>
+
+    <!-- Linha 1: Ver Produtos + Assinaturas -->
+    <HBox spacing="30" alignment="CENTER">
+        <!-- Ver Produtos -->
+        <VBox fx:id="cardVerProdutos" alignment="CENTER" spacing="10" styleClass="cards"
+              onMouseClicked="#handleVerProdutosClick">
+            <ImageView fitWidth="180" fitHeight="140" preserveRatio="true">
+                <image>
+                    <Image url="@/Imagens/verproduto.png"/>
+                </image>
+            </ImageView>
+            <Label text="Ver Produtos" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+        </VBox>
+
+        <!-- Assinaturas -->
+        <VBox fx:id="cardAssinaturas" alignment="CENTER" spacing="10" styleClass="cards"
+              onMouseClicked="#handleAssinaturasClick">
+            <ImageView fitWidth="180" fitHeight="140" preserveRatio="true">
+                <image>
+                    <Image url="@/Imagens/assinatura.png"/>
+                </image>
+            </ImageView>
+            <Label text="Assinaturas" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+        </VBox>
+    </HBox>
+
+    <!-- Linha 2: Meus Pedidos + Save to Food -->
+    <HBox spacing="30" alignment="CENTER">
+        <!-- Meus Pedidos -->
+        <VBox fx:id="cardMeusPedidos" alignment="CENTER" spacing="10" styleClass="cards"
+              onMouseClicked="#handleMeusPedidosClick">
+            <ImageView fitWidth="180" fitHeight="140" preserveRatio="true">
+                <image>
+                    <Image url="@/Imagens/meuspedidos.png"/>
+                </image>
+            </ImageView>
+            <Label text="Meus Pedidos" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+        </VBox>
+
+        <!-- Save to Food -->
+        <VBox fx:id="cardFoodToSave" alignment="CENTER" spacing="10" styleClass="cards"
+              onMouseClicked="#handleFoodToSaveClick">
+            <ImageView fitWidth="180" fitHeight="140" preserveRatio="true">
+                <image>
+                    <Image url="@/Imagens/logo.png"/>
+                </image>
+            </ImageView>
+            <Label text="Food To Save" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+        </VBox>
+    </HBox>
+
+    <!-- Botão de Sair -->
+    <Label text="Sair" styleClass="button-exit" onMouseClicked="#handleSair" alignment="CENTER" prefWidth="180"/>
+    
+</VBox>

@@ -3,6 +3,7 @@ package com.hortifacil.dao;
 import com.hortifacil.model.Cliente;
 import com.hortifacil.model.Usuario;
 import com.hortifacil.util.Enums;
+import com.hortifacil.model.Endereco;
 
 import java.sql.*;
 
@@ -224,6 +225,49 @@ public int obterIdClientePorIdUsuario(int idUsuario) throws SQLException {
             }
         }
     }
+}
+
+public void atualizarCliente(Cliente cliente, Endereco endereco) throws SQLException {
+    // Atualiza dados do cliente
+    String sqlCliente = "UPDATE cliente SET nome = ?, email = ?, telefone = ? WHERE id_cliente = ?";
+    try (PreparedStatement stmt = conn.prepareStatement(sqlCliente)) {
+        stmt.setString(1, cliente.getNome());
+        stmt.setString(2, cliente.getEmail());
+        stmt.setString(3, cliente.getTelefone());
+        stmt.setInt(4, cliente.getIdCliente());
+        stmt.executeUpdate();
+    }
+
+    // Atualiza dados do endereço
+    String sqlEndereco = "UPDATE endereco SET rua = ?, numero = ?, bairro = ?, complemento = ? WHERE id_cliente = ?";
+    try (PreparedStatement stmt = conn.prepareStatement(sqlEndereco)) {
+        stmt.setString(1, endereco.getRua());
+        stmt.setString(2, endereco.getNumero());
+        stmt.setString(3, endereco.getBairro());
+        stmt.setString(4, endereco.getComplemento());
+        stmt.setInt(5, cliente.getIdCliente());
+        stmt.executeUpdate();
+    }
+}
+
+public Endereco buscarEnderecoObjeto(int idCliente) {
+    String sql = "SELECT rua, numero, bairro, complemento FROM endereco WHERE id_cliente = ?";
+    try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+        stmt.setInt(1, idCliente);
+        ResultSet rs = stmt.executeQuery();
+        if (rs.next()) {
+            Endereco endereco = new Endereco();
+            endereco.setRua(rs.getString("rua"));
+            endereco.setNumero(rs.getString("numero"));
+            endereco.setBairro(rs.getString("bairro"));
+            endereco.setComplemento(rs.getString("complemento"));
+            endereco.setClienteId(idCliente);
+            return endereco;
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return null;
 }
 
 }

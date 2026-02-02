@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.hortifacil.controller.ClienteFoodToSaveDetalheController"
+            prefWidth="800" prefHeight="650">
+
+    <!-- Topo: botão voltar -->
+    <top>
+        <HBox spacing="10" style="-fx-padding: 10;" alignment="CENTER_LEFT">
+            <Button text="Voltar" onAction="#handleVoltar" styleClass="button-exit"/>
+        </HBox>
+    </top>
+
+    <!-- Conteúdo principal com scroll -->
+    <center>
+        <ScrollPane fitToWidth="true" fitToHeight="true" style="-fx-padding: 0;">
+            <VBox spacing="25" style="-fx-padding: 20; -fx-background-color: white;" prefWidth="780">
+
+                <!-- Linha superior: imagem | detalhes -->
+                <HBox spacing="25">
+                    <ImageView fx:id="imagemView" fitWidth="220" fitHeight="220" preserveRatio="true"/>
+                    
+                    <VBox spacing="15" alignment="TOP_LEFT">
+                        <Label fx:id="nomeLabel" style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
+                        <Label fx:id="mediaEstrelasLabel" style="-fx-font-size: 18px; -fx-text-fill: #ffb400;"/>
+                        <Label fx:id="dataColheitaLabel"/>
+                        <Label fx:id="dataValidadeLabel"/>
+                        <Label fx:id="quantidadeLabel"/>
+                        
+                        <!-- Preço com destaque -->
+                        <HBox spacing="10" alignment="CENTER_LEFT">
+                            <Label fx:id="precoOriginalLabel" style="-fx-strikethrough: true; -fx-text-fill: gray; -fx-font-size: 16px;"/>
+                            <Label fx:id="precoDescontoLabel" style="-fx-text-fill: green; -fx-font-size: 20px; -fx-font-weight: bold;"/>
+                            <Label fx:id="porcentagemLabel" style="-fx-text-fill: red; -fx-font-size: 16px; -fx-font-weight: bold;"/>
+                        </HBox>
+
+                        <HBox spacing="10">
+                            <Label text="Quantidade:"/>
+                            <TextField fx:id="quantidadeField" text="1" prefWidth="60"/>
+                            <Button text="Adicionar ao Carrinho" onAction="#handleAdicionarAoCarrinho" styleClass="button-green"/>
+                            <Button text="Ir ao Carrinho" onAction="#handleIrAoCarrinho" styleClass="button-green"/>
+                        </HBox>
+                        
+                        <Label fx:id="mensagemLabel" style="-fx-text-fill: green;"/>
+                    </VBox>
+                </HBox>
+
+                <!-- Descrição -->
+                <VBox spacing="10" style="-fx-padding: 15; -fx-background-color: #f5f5f5; -fx-border-radius: 8; -fx-background-radius: 8;">
+                    <Label text="Descrição do Produto:" styleClass="subtitle-label"/>
+                    <Label fx:id="descricaoLabel" wrapText="true" prefWidth="600"/>
+                </VBox>
+
+                 <!-- Avaliações -->
+                <VBox spacing="10" style="-fx-padding: 15; -fx-background-color: #f5f5f5; -fx-border-radius: 8; -fx-background-radius: 8;">
+                    <Label text="Avaliações do Produto:" styleClass="subtitle-label"/>
+
+                    <!-- Formulário de avaliação -->
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <ComboBox fx:id="estrelasComboBox" prefWidth="97"/>
+                        <TextField fx:id="comentarioField" promptText="Deixe um comentário..." prefWidth="400"/>
+                        <Button text="Enviar" onAction="#enviarAvaliacao" styleClass="button-green"/>
+                    </HBox>
+
+                    <!-- Container de cards -->
+                    <VBox fx:id="avaliacoesContainer" spacing="10" style="-fx-padding: 5;"/>
+                </VBox>
+            </VBox>
+        </ScrollPane>
+    </center>
+</BorderPane>

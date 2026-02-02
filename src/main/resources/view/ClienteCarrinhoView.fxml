@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.hortifacil.controller.ClienteCarrinhoController"
+      spacing="0"
+      alignment="TOP_CENTER"
+      stylesheets="@/css/style.css"
+      prefWidth="800" prefHeight="800"
+      style="-fx-background-color: #e3f2d8;">
+
+    <!-- Faixa branca no topo: botão voltar e título -->
+    <HBox spacing="20" alignment="CENTER_LEFT" style="-fx-background-color: white; -fx-padding: 15;">
+        <Button fx:id="btnVoltar" text="Voltar" styleClass="button-exit"/>
+        <Label text="Carrinho de Compras" styleClass="title-label"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <HBox spacing="10">
+            <Button fx:id="btnVerProdutos" text="Ver Produtos" styleClass="button-green" prefWidth="150"/>
+            <Button fx:id="btnVerFoodToSave" text="Ver Food to Save" styleClass="button-green" prefWidth="180"/>
+        </HBox>
+    </HBox>
+
+    <!-- Conteúdo principal: cards do carrinho -->
+    <ScrollPane fitToWidth="true" fitToHeight="true" style="-fx-background-color: transparent;" prefHeight="600">
+        <VBox fx:id="vboxCarrinho" spacing="15" style="-fx-padding: 15;"/>
+    </ScrollPane>
+
+    <!-- Rodapé: total e ações -->
+    <VBox spacing="15" style="-fx-padding: 15;">
+        <HBox spacing="20" alignment="CENTER_RIGHT">
+            <Label fx:id="lblTotal" text="Total: R$ 0,00"
+                   style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: green;"/>
+        </HBox>
+        <HBox spacing="0" alignment="CENTER_RIGHT">
+            <Button fx:id="btnFinalizar" text="Finalizar Pedido" prefWidth="230" styleClass="button-green"/>
+        </HBox>
+        <Label fx:id="lblStatus" styleClass="status-label"/>
+    </VBox>
+
+</VBox>

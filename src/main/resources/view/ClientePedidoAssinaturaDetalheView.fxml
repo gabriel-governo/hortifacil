@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.hortifacil.controller.ClientePedidoAssinaturaDetalheController"
+            styleClass="root-pane"
+            prefWidth="900" prefHeight="650">
+
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="15" style="-fx-padding: 15;">
+            <Button fx:id="btnVoltar" text="⟵ Voltar" onAction="#voltarParaAssinatura" styleClass="button-exit"/>
+            <Label fx:id="lblTituloPedido" text="Pedido Assinatura #"
+                   style="-fx-font-size: 22px; -fx-font-weight: bold;"/>
+        </HBox>
+    </top>
+
+    <center>
+        <ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED"
+                    style="-fx-background-color: transparent;">
+            <VBox spacing="10" alignment="TOP_LEFT" style="-fx-padding: 25;">
+                <Label fx:id="lblNomeCliente"/>
+                <Label fx:id="lblEnderecoCliente"/>
+                <Label fx:id="lblDataPedido"/>
+                <Label fx:id="lblStatus"/>
+                <Label fx:id="lblEntregaInfo"/>
+
+                <Separator/>
+
+                <VBox fx:id="produtosContainer" spacing="15"/>
+            </VBox>
+        </ScrollPane>
+    </center>
+</BorderPane>

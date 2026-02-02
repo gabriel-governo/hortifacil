@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.hortifacil.controller.AdminPedidoAssinaturaListarController"
+            stylesheets="@/css/style.css"
+            prefWidth="1000" prefHeight="700">
+
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="20" styleClass="top-bar">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+
+            <Button fx:id="btnVoltarHome" text="Voltar" onAction="#btnVoltarHome" styleClass="button-exit"/>
+
+            <Region HBox.hgrow="ALWAYS"/>
+
+            <!-- Título -->
+            <Label text="Pedidos de Assinatura" styleClass="title-label"/>
+
+            <Region HBox.hgrow="ALWAYS"/>
+        </HBox>
+    </top>
+
+    <center>
+        <ScrollPane fitToWidth="true" BorderPane.alignment="CENTER">
+            <VBox fx:id="pedidosContainer"
+                  spacing="15"
+                  fillWidth="true"
+                  styleClass="root-pane">
+                <padding>
+                    <Insets top="10" right="10" bottom="10" left="10"/>
+                </padding>
+            </VBox>
+        </ScrollPane>
+    </center>
+
+</BorderPane>

@@ -15,59 +15,60 @@ public class CarrinhoProdutoDAOImpl implements CarrinhoProdutoDAO {
     public CarrinhoProdutoDAOImpl(Connection connection) {
         this.connection = connection;
     }
-    
-    
+
     public int obterClienteIdPorUsuarioId(int usuarioId) throws SQLException {
-    String sql = "SELECT id FROM cliente WHERE id_usuario = ?";
-    try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-        stmt.setInt(1, usuarioId);
-        ResultSet rs = stmt.executeQuery();
-        if (rs.next()) {
-            return rs.getInt("id");
-        } else {
-            throw new SQLException("Cliente não encontrado para usuário: " + usuarioId);
+        String sql = "SELECT id FROM cliente WHERE id_usuario = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, usuarioId);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("id");
+            } else {
+                throw new SQLException("Cliente não encontrado para usuário: " + usuarioId);
+            }
         }
     }
-}
 
-public boolean clienteExiste(int clienteId) throws SQLException {
-    String sql = "SELECT 1 FROM cliente WHERE id_cliente = ?";
-    try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-        stmt.setInt(1, clienteId);
-        ResultSet rs = stmt.executeQuery();
-        return rs.next();
+    public boolean clienteExiste(int clienteId) throws SQLException {
+        String sql = "SELECT 1 FROM cliente WHERE id_cliente = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, clienteId);
+            ResultSet rs = stmt.executeQuery();
+            return rs.next();
+        }
     }
-}
 
     @Override
     public void adicionarAoCarrinho(CarrinhoProduto item) throws SQLException {
-            System.out.println("Cliente ID no item: " + item.getClienteId());  
         int idCarrinho = obterOuCriarCarrinhoAberto(item.getClienteId());
 
-        String verificaProduto = "SELECT quantidade FROM carrinho_produto WHERE id_carrinho = ? AND id_produto = ?";
+        String verificaProduto = "SELECT quantidade FROM carrinho_produto WHERE id_carrinho = ? AND id_produto = ? AND is_food_to_save = ?";
         try (PreparedStatement stmt = connection.prepareStatement(verificaProduto)) {
             stmt.setInt(1, idCarrinho);
             stmt.setInt(2, item.getProduto().getId());
+            stmt.setBoolean(3, item.isFoodToSave());
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
                 int quantidadeAtual = rs.getInt("quantidade");
                 int novaQuantidade = quantidadeAtual + item.getQuantidade();
 
-                String atualizaQuantidade = "UPDATE carrinho_produto SET quantidade = ? WHERE id_carrinho = ? AND id_produto = ?";
+                String atualizaQuantidade = "UPDATE carrinho_produto SET quantidade = ? WHERE id_carrinho = ? AND id_produto = ? AND is_food_to_save = ?";
                 try (PreparedStatement updateStmt = connection.prepareStatement(atualizaQuantidade)) {
                     updateStmt.setInt(1, novaQuantidade);
                     updateStmt.setInt(2, idCarrinho);
                     updateStmt.setInt(3, item.getProduto().getId());
+                    updateStmt.setBoolean(4, item.isFoodToSave());
                     updateStmt.executeUpdate();
                 }
             } else {
-                String insereProduto = "INSERT INTO carrinho_produto (id_carrinho, id_produto, quantidade, preco_unitario) VALUES (?, ?, ?, ?)";
+                String insereProduto = "INSERT INTO carrinho_produto (id_carrinho, id_produto, quantidade, preco_unitario, is_food_to_save) VALUES (?, ?, ?, ?, ?)";
                 try (PreparedStatement insertStmt = connection.prepareStatement(insereProduto)) {
                     insertStmt.setInt(1, idCarrinho);
                     insertStmt.setInt(2, item.getProduto().getId());
                     insertStmt.setInt(3, item.getQuantidade());
                     insertStmt.setDouble(4, item.getPrecoUnitario());
+                    insertStmt.setBoolean(5, item.isFoodToSave());
                     insertStmt.executeUpdate();
                 }
             }
@@ -91,10 +92,7 @@ public boolean clienteExiste(int clienteId) throws SQLException {
         String insereCarrinho = "INSERT INTO carrinho (id_cliente, status) VALUES (?, 'ABERTO')";
         try (PreparedStatement stmtInsere = connection.prepareStatement(insereCarrinho, Statement.RETURN_GENERATED_KEYS)) {
             stmtInsere.setInt(1, clienteId);
-            int affectedRows = stmtInsere.executeUpdate();
-            if (affectedRows == 0) {
-                throw new SQLException("Falha ao criar novo carrinho para cliente: " + clienteId);
-            }
+            stmtInsere.executeUpdate();
             ResultSet generatedKeys = stmtInsere.getGeneratedKeys();
             if (generatedKeys.next()) {
                 return generatedKeys.getInt(1);
@@ -108,7 +106,7 @@ public boolean clienteExiste(int clienteId) throws SQLException {
     public boolean limparCarrinhoDoCliente(int clienteId) {
         try {
             String buscaCarrinho = "SELECT id_carrinho FROM carrinho WHERE id_cliente = ? AND status = 'ABERTO'";
-            int idCarrinho = 0;
+            int idCarrinho;
             try (PreparedStatement stmtBusca = connection.prepareStatement(buscaCarrinho)) {
                 stmtBusca.setInt(1, clienteId);
                 ResultSet rs = stmtBusca.executeQuery();
@@ -124,6 +122,7 @@ public boolean clienteExiste(int clienteId) throws SQLException {
                 stmt.setInt(1, idCarrinho);
                 return stmt.executeUpdate() > 0;
             }
+
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
@@ -133,59 +132,66 @@ public boolean clienteExiste(int clienteId) throws SQLException {
     @Override
     public List<CarrinhoProduto> listarPorCliente(int clienteId) {
         List<CarrinhoProduto> itens = new ArrayList<>();
-        String sql = "SELECT cp.id_carrinho, cp.id_produto, cp.quantidade, cp.preco_unitario, " +
-             "p.nome, p.preco_unitario AS produto_preco, p.imagem_path, p.descricao, " +
-             "u.id_unidade, u.nome AS nome_unidade " +
-             "FROM carrinho_produto cp " +
-             "JOIN carrinho c ON cp.id_carrinho = c.id_carrinho " +
-             "JOIN produto p ON cp.id_produto = p.id_produto " +
-             "JOIN unidade_medida u ON p.id_unidade = u.id_unidade " +
-             "WHERE c.id_cliente = ? AND c.status = 'ABERTO'";
+        int idCarrinho;
+        try {
+            idCarrinho = obterOuCriarCarrinhoAberto(clienteId);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return itens;
+        }
 
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setInt(1, clienteId);
+        String sqlProdutos = """
+            SELECT cp.id_produto, cp.quantidade, cp.preco_unitario, cp.is_food_to_save,
+                   p.nome, p.preco_unitario AS produto_preco, p.imagem_path, p.descricao,
+                   u.id_unidade, u.nome AS nome_unidade
+            FROM carrinho_produto cp
+            JOIN produto p ON cp.id_produto = p.id_produto
+            JOIN unidade_medida u ON p.id_unidade = u.id_unidade
+            WHERE cp.id_carrinho = ?
+        """;
+        try (PreparedStatement stmt = connection.prepareStatement(sqlProdutos)) {
+            stmt.setInt(1, idCarrinho);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
-                UnidadeMedida unidade = new UnidadeMedida(
-                        rs.getInt("id_unidade"),
-                        rs.getString("nome_unidade")
-                );
-
                 Produto produto = new Produto(
-                        rs.getInt("id_produto"),
-                        rs.getString("nome"),
-                        rs.getDouble("produto_preco"),
-                        rs.getString("imagem_path"),
-                        rs.getString("descricao"),
-                        unidade
+                    rs.getInt("id_produto"),
+                    rs.getString("nome"),
+                    rs.getDouble("produto_preco"),
+                    rs.getString("imagem_path"),
+                    rs.getString("descricao"),
+                    new UnidadeMedida(rs.getInt("id_unidade"), rs.getString("nome_unidade"))
                 );
-
                 CarrinhoProduto item = new CarrinhoProduto(
-                        rs.getInt("id_carrinho"),
-                        clienteId,
-                        produto,
-                        rs.getInt("quantidade"),
-                        rs.getDouble("preco_unitario")
+                    clienteId,
+                    produto,
+                    rs.getInt("quantidade"),
+                    rs.getDouble("preco_unitario"),
+                    rs.getBoolean("is_food_to_save")
                 );
-
                 itens.add(item);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
         return itens;
     }
 
     @Override
     public boolean atualizarQuantidade(int clienteId, int produtoId, int quantidade) {
+        return atualizarQuantidade(clienteId, produtoId, quantidade, false);
+    }
+
+    @Override
+    public boolean atualizarQuantidade(int clienteId, int produtoId, int quantidade, boolean isFoodToSave) {
         try {
             int idCarrinho = obterCarrinhoAbertoPorCliente(clienteId);
-
-            String sql = "UPDATE carrinho_produto SET quantidade = ? WHERE id_carrinho = ? AND id_produto = ?";
+            String sql = "UPDATE carrinho_produto SET quantidade = ? WHERE id_carrinho = ? AND id_produto = ? AND is_food_to_save = ?";
             try (PreparedStatement stmt = connection.prepareStatement(sql)) {
                 stmt.setInt(1, quantidade);
                 stmt.setInt(2, idCarrinho);
                 stmt.setInt(3, produtoId);
+                stmt.setBoolean(4, isFoodToSave);
                 return stmt.executeUpdate() > 0;
             }
         } catch (SQLException e) {
@@ -207,54 +213,58 @@ public boolean clienteExiste(int clienteId) throws SQLException {
         }
     }
 
- @Override
-public List<CarrinhoProduto> listarPorPedido(int pedidoId) throws SQLException {
-    String sql = "SELECT pi.quantidade, pi.preco_unitario, p.id_produto, p.nome, p.id_unidade, u.nome as unidade_nome " +
-             "FROM pedido_produto pi " +
-             "JOIN produto p ON pi.id_produto = p.id_produto " +
-             "JOIN unidade_medida u ON p.id_unidade = u.id_unidade " +
-             "WHERE pi.id_pedido = ?";
+    @Override
+    public List<CarrinhoProduto> listarPorPedido(int pedidoId) throws SQLException {
+        String sql = """
+            SELECT pi.quantidade, pi.preco_unitario, p.id_produto, p.nome, p.id_unidade, u.nome AS unidade_nome
+            FROM pedido_produto pi
+            JOIN produto p ON pi.id_produto = p.id_produto
+            JOIN unidade_medida u ON p.id_unidade = u.id_unidade
+            WHERE pi.id_pedido = ?
+        """;
 
-    List<CarrinhoProduto> itens = new ArrayList<>();
+        List<CarrinhoProduto> itens = new ArrayList<>();
 
-    try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-        stmt.setInt(1, pedidoId);
-        try (ResultSet rs = stmt.executeQuery()) {
-            while (rs.next()) {
-                Produto produto = new Produto();
-                produto.setId(rs.getInt("id_produto"));
-                produto.setNome(rs.getString("nome"));
-                // Não setar preco aqui, pois não existe p.preco no select
-                produto.setUnidade(new UnidadeMedida(rs.getInt("id_unidade"), rs.getString("unidade_nome")));
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, pedidoId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Produto produto = new Produto();
+                    produto.setId(rs.getInt("id_produto"));
+                    produto.setNome(rs.getString("nome"));
+                    produto.setUnidade(new UnidadeMedida(rs.getInt("id_unidade"), rs.getString("unidade_nome")));
 
-                CarrinhoProduto item = new CarrinhoProduto();
-                item.setProduto(produto);
-                item.setQuantidade(rs.getInt("quantidade"));
-                item.setPrecoUnitario(rs.getDouble("preco_unitario"));
+                    CarrinhoProduto item = new CarrinhoProduto();
+                    item.setProduto(produto);
+                    item.setQuantidade(rs.getInt("quantidade"));
+                    item.setPrecoUnitario(rs.getDouble("preco_unitario"));
 
-                itens.add(item);
+                    itens.add(item);
+                }
             }
         }
+
+        return itens;
     }
 
-    return itens;
-}
+    @Override
+    public boolean removerItem(int clienteId, int produtoId) {
+        return removerItem(clienteId, produtoId, false);
+    }
 
-   @Override
-public boolean removerItem(int clienteId, int produtoId) {
-    try {
-        int idCarrinho = obterCarrinhoAbertoPorCliente(clienteId);
-        String sql = "DELETE FROM carrinho_produto WHERE id_carrinho = ? AND id_produto = ?";
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setInt(1, idCarrinho);
-            stmt.setInt(2, produtoId);
-            return stmt.executeUpdate() > 0;
+    public boolean removerItem(int clienteId, int produtoId, boolean isFoodToSave) {
+        try {
+            int idCarrinho = obterCarrinhoAbertoPorCliente(clienteId);
+            String sql = "DELETE FROM carrinho_produto WHERE id_carrinho = ? AND id_produto = ? AND is_food_to_save = ?";
+            try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+                stmt.setInt(1, idCarrinho);
+                stmt.setInt(2, produtoId);
+                stmt.setBoolean(3, isFoodToSave);
+                return stmt.executeUpdate() > 0;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
         }
-    } catch (SQLException e) {
-        e.printStackTrace();
-        return false;
     }
-}
-
-
 }

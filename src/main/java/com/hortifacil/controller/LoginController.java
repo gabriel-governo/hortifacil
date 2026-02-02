@@ -2,6 +2,7 @@ package com.hortifacil.controller;
 
 import com.hortifacil.model.Cliente;
 import com.hortifacil.model.Usuario;
+import com.hortifacil.service.ClienteService;
 import com.hortifacil.service.UsuarioService;
 import com.hortifacil.util.Enums;
 import com.hortifacil.util.Enums.ResultadoLogin;
@@ -63,51 +64,84 @@ public class LoginController {
     }
 
     @FXML
-    public void handleLogin() {
+public void handleLogin() {
     String login = loginField.getText().trim();
-        String senha = showPasswordCheck.isSelected() ? passwordVisibleField.getText().trim() : passwordField.getText().trim();
+    String senha = showPasswordCheck.isSelected()
+        ? passwordVisibleField.getText().trim()
+        : passwordField.getText().trim();
+    
 
     if (login.isEmpty() || senha.isEmpty()) {
         setMessageErro("Preencha usuário e senha.");
-            return;
-        }
+        return;
+    }
 
     try {
         UsuarioService usuarioService = new UsuarioService();
         ResultadoLogin resultado = usuarioService.autenticar(login, senha);
+        
 
         switch (resultado) {
-            case SUCESSO-> {
+            case SUCESSO -> {
                 Usuario usuario = usuarioService.getUsuarioPorLogin(login);
                 Stage stage = (Stage) loginButton.getScene().getWindow();
 
                 if (usuario.getTipo() == Enums.TipoUsuario.ADMIN) {
-                    SceneController.trocarCena(stage, "/view/HomeAdminView.fxml", "Admin");
-                } else if (usuario instanceof Cliente cliente) {
-                    SceneController.trocarCenaComDados(
+                    AppSplashController.<AdminHomeController>trocarCenaComDados(
                         stage,
-                        "/view/HomeClienteView.fxml",
-                        "Cliente",
+                        "/view/AdminHomeView.fxml",
+                        "Admin",
                         controller -> {
-                            if (controller instanceof HomeClienteController homeController) {
-                                homeController.setDadosUsuario(cliente.getCpf(), cliente.getNome(), cliente.getId());
-                            }
+                        
                         }
                     );
+
+                } else if (usuario.getTipo() == Enums.TipoUsuario.CLIENTE) {
+                    try {
+                        Cliente cliente = usuarioService.getClientePorUsuarioId(usuario.getId());
+                        String endereco = ClienteService.getInstance().buscarEnderecoPorId(cliente.getId());
+
+                        int usuarioId = usuario.getId();
+                        String cpf = cliente.getCpf();
+                        String nomeUsuario = cliente.getNome();
+                        String loginUsuario = usuario.getLogin();
+                        int clienteId = cliente.getId();
+                        String enderecoCliente = endereco;
+
+                        AppSplashController.<ClienteHomeController>trocarCenaComDados(
+                            stage,
+                            "/view/ClienteHomeView.fxml",
+                            "Cliente",
+                            controller -> controller.setDadosUsuario(
+                                usuarioId,
+                                cpf,
+                                nomeUsuario,
+                                loginUsuario,
+                                clienteId,
+                                enderecoCliente
+                            )
+                        );
+
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                        setMessageErro("Cliente não encontrado para este usuário.");
+                    }
                 }
+
                 clearMessage();
             }
+
             case USUARIO_NAO_ENCONTRADO -> setMessageErro("Usuário não encontrado.");
             case SENHA_INVALIDA -> setMessageErro("Senha incorreta.");
             case USUARIO_INATIVO -> setMessageErro("Usuário inativo. Contate o administrador.");
             default -> setMessageErro("Erro desconhecido. Tente novamente.");
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-            setMessageErro("Erro ao conectar com o banco de dados.");
         }
+
+    } catch (SQLException e) {
+        e.printStackTrace();
+        setMessageErro("Erro ao conectar com o banco de dados.");
     }
+}
 
     @FXML
     private void exibirMensagemSenha(ActionEvent event) {
@@ -118,16 +152,10 @@ public class LoginController {
         alert.showAndWait();
 }
 
-
     @FXML
     public void abrirCadastro() {
         try {
-            URL url = getClass().getResource("/view/CadastroClienteView.fxml");
-            if (url == null) {
-                System.out.println("Arquivo CadastroClienteView.fxml não encontrado!");
-                return;
-            }
-
+            URL url = getClass().getResource("/view/ClienteCadastroView.fxml");
             FXMLLoader loader = new FXMLLoader(url);
             Parent root = loader.load();
 
@@ -138,6 +166,13 @@ public class LoginController {
             stage.setScene(scene);
             stage.setTitle("Criar Conta");
             stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setWidth(800);
+            stage.setHeight(600);
+            stage.setMinWidth(800);
+            stage.setMinHeight(600);
+            stage.setMaxWidth(800);
+            stage.setMaxHeight(600);
+
             stage.show();
 
         } catch (Exception e) {

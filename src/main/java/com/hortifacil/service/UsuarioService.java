@@ -9,6 +9,8 @@ import com.hortifacil.database.DatabaseConnection;
 import com.hortifacil.util.Enums;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class UsuarioService {
@@ -77,4 +79,53 @@ public class UsuarioService {
             throw new IllegalArgumentException("CPF inválido para cliente.");
         }
     }
+
+    public Cliente getClientePorUsuarioId(int usuarioId) throws SQLException {
+    return usuarioDAO.buscarClientePorUsuarioId(usuarioId);
+}
+
+ // Verifica se login já existe
+    public boolean loginExiste(String login) {
+        String sql = "SELECT COUNT(*) FROM usuario WHERE login = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, login);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return true; // por segurança, assume que existe
+    }
+
+    // Atualizar login
+    public boolean atualizarLogin(int usuarioId, String novoLogin) {
+        String sql = "UPDATE usuario SET login = ? WHERE id = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, novoLogin);
+            stmt.setInt(2, usuarioId);
+            return stmt.executeUpdate() > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    // Atualizar senha
+    public boolean atualizarSenha(int usuarioId, String novaSenha) {
+        String sql = "UPDATE usuario SET senha = ? WHERE id = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, novaSenha);
+            stmt.setInt(2, usuarioId);
+            return stmt.executeUpdate() > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
 }

@@ -9,11 +9,29 @@ public class UnidadeMedida {
         this.nome = nome;
     }
 
-    public int getId() { return id; }
-    public String getNome() { return nome; }
+    public UnidadeMedida() {
+        // Construtor vazio, útil para frameworks e DAOs
+    }
+
+    public int getId() { 
+        return id; 
+    }
+
+    public void setId(int id) { 
+        this.id = id; 
+    }
+
+    public String getNome() { 
+        return nome; 
+    }
+
+    public void setNome(String nome) { 
+        this.nome = nome; 
+    }
 
     @Override
     public String toString() {
         return nome;
     }
 }
+

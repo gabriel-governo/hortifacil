@@ -147,18 +147,18 @@ public boolean atualizarUsuario(Usuario usuario) throws SQLException {
         if (rowsUpdated == 0) return false;
     }
 
-    if (usuario instanceof Cliente cliente) {
-        String sqlCliente = "UPDATE cliente SET cpf = ?, nome = ?, email = ?, telefone = ? WHERE id_usuario = ?";
-        try (PreparedStatement stmtCliente = conn.prepareStatement(sqlCliente)) {
-            stmtCliente.setString(1, cliente.getCpf());
-            stmtCliente.setString(2, cliente.getNome());
-            stmtCliente.setString(3, cliente.getEmail());
-            stmtCliente.setString(4, cliente.getTelefone());
-            stmtCliente.setInt(5, cliente.getId());  // corrigido aqui, usa getId() do Usuario
-            int rowsUpdated = stmtCliente.executeUpdate();
-            if (rowsUpdated == 0) return false;
-        }
+ if (usuario instanceof Cliente cliente) {
+    String sqlCliente = "UPDATE cliente SET cpf = ?, nome = ?, email = ?, telefone = ? WHERE id_usuario = ?";
+    try (PreparedStatement stmtCliente = conn.prepareStatement(sqlCliente)) {
+        stmtCliente.setString(1, cliente.getCpf());
+        stmtCliente.setString(2, cliente.getNome());
+        stmtCliente.setString(3, cliente.getEmail());
+        stmtCliente.setString(4, cliente.getTelefone());
+        stmtCliente.setInt(5, cliente.getIdUsuario());  // deve ser id_usuario, não id_cliente
+        int rowsUpdated = stmtCliente.executeUpdate();
+        if (rowsUpdated == 0) return false;
     }
+}
 
     return true;  // retorna true só se tudo deu certo
 }
@@ -175,4 +175,69 @@ public boolean atualizarUsuario(Usuario usuario) throws SQLException {
         }
         return false;
     }
+
+public Cliente buscarClientePorUsuarioId(int usuarioId) throws SQLException {
+    String sql = "SELECT * FROM cliente WHERE id_usuario = ?";
+    try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+        stmt.setInt(1, usuarioId);
+        try (ResultSet rs = stmt.executeQuery()) {
+            if (rs.next()) {
+                Cliente cliente = new Cliente();
+                cliente.setId(rs.getInt("id_cliente"));
+                cliente.setNome(rs.getString("nome"));
+                cliente.setCpf(rs.getString("cpf"));
+                cliente.setEmail(rs.getString("email"));
+                cliente.setTelefone(rs.getString("telefone")); // importante preencher telefone também
+                cliente.setIdUsuario(usuarioId);
+                return cliente;
+            } else {
+                return null;
+            }
+        }
+    }
+}
+
+public boolean loginExiste(String login) throws SQLException {
+    return existeLogin(login);
+}
+
+    // Verifica senha
+public boolean verificarSenha(int usuarioId, String senhaDigitada) throws SQLException {
+    String sql = "SELECT senha FROM usuario WHERE id_usuario = ?";
+    try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+        stmt.setInt(1, usuarioId);
+        ResultSet rs = stmt.executeQuery();
+
+        if (rs.next()) {
+            String senhaHash = rs.getString("senha");
+            return BCrypt.checkpw(senhaDigitada, senhaHash);
+        }
+    }
+    return false;
+}
+
+// Atualiza senha
+public boolean atualizarSenha(int usuarioId, String novaSenha) throws SQLException {
+    String sql = "UPDATE usuario SET senha = ? WHERE id_usuario = ?";
+    try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+        String senhaHash = BCrypt.hashpw(novaSenha, BCrypt.gensalt());
+        stmt.setString(1, senhaHash);
+        stmt.setInt(2, usuarioId);
+        return stmt.executeUpdate() > 0;
+    }
+}
+
+public boolean atualizarLogin(int usuarioId, String novoLogin) {
+    String sql = "UPDATE usuario SET login = ? WHERE id_usuario = ?";
+    try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+        stmt.setString(1, novoLogin);
+        stmt.setInt(2, usuarioId);
+
+        return stmt.executeUpdate() > 0;
+    } catch (SQLException e) {
+        e.printStackTrace();
+        return false;
+    }
+}
+
 }

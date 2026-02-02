@@ -12,9 +12,14 @@ public interface CarrinhoProdutoDAO {
 
     boolean atualizarQuantidade(int clienteId, int produtoId, int quantidade) throws SQLException;
 
+    boolean atualizarQuantidade(int clienteId, int produtoId, int quantidade, boolean isFoodToSave) throws SQLException;
+
     boolean removerItem(int clienteId, int produtoId) throws SQLException;
 
     List<CarrinhoProduto> listarPorPedido(int pedidoId) throws SQLException;
 
     void adicionarAoCarrinho(CarrinhoProduto item) throws SQLException;
+
+    boolean removerItem(int clienteId, int produtoId, boolean isFoodToSave);
+
 }

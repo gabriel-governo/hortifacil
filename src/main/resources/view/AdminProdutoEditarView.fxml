@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<GridPane xmlns="http://javafx.com/javafx/21"
+          xmlns:fx="http://javafx.com/fxml"
+          fx:controller="com.hortifacil.controller.AdminProdutoEditarController"
+          alignment="CENTER"
+          hgap="10" vgap="10"
+          stylesheets="@/css/style.css"
+          styleClass="root-pane"
+          prefWidth="1000" prefHeight="700">
+
+    <padding>
+        <Insets top="25" right="25" bottom="25" left="25"/>
+    </padding>
+
+    <columnConstraints>
+        <ColumnConstraints halignment="RIGHT" minWidth="150"/>
+        <ColumnConstraints hgrow="ALWAYS" minWidth="300"/>
+    </columnConstraints>
+
+    <!-- Linha do título + Voltar -->
+    <HBox spacing="10" GridPane.rowIndex="0" GridPane.columnIndex="0" GridPane.columnSpan="2" alignment="CENTER">
+        <!-- Botão Voltar à esquerda -->
+        <Button text="Voltar" fx:id="voltarBtn" onAction="#handleVoltar" styleClass="button-exit" HBox.hgrow="NEVER"/>
+        
+        <!-- Spacer para centralizar o título -->
+        <Region HBox.hgrow="ALWAYS"/>
+        
+        <!-- Título centralizado -->
+        <Label text="Alterar Produtos" styleClass="title-label"/>
+        
+        <!-- Spacer à direita -->
+        <Region HBox.hgrow="ALWAYS"/>
+    </HBox>
+
+    <!-- ComboBox de Produtos -->
+    <Label text="Produtos Cadastrados:" GridPane.rowIndex="1" GridPane.columnIndex="0" alignment="TOP_RIGHT"/>
+    <ComboBox fx:id="produtosComboBox" prefHeight="30" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+    <!-- Campos do Produto -->
+    <Label text="Nome:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+    <TextField fx:id="nomeField" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+    <Label text="Preço:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+    <TextField fx:id="precoField" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+    <Label text="Unidade:" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+    <ComboBox fx:id="unidadeComboBox" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+
+    <Label text="Caminho da Imagem:" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
+    <TextField fx:id="imagemField" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+
+    <Label text="Descrição:" GridPane.rowIndex="6" GridPane.columnIndex="0" alignment="TOP_CENTER"/>
+    <TextArea fx:id="descricaoArea" prefRowCount="3" GridPane.rowIndex="6" GridPane.columnIndex="1"/>
+
+    <Label text="Dias para Vencer:" GridPane.rowIndex="7" GridPane.columnIndex="0"/>
+    <TextField fx:id="diasParaVencerField" GridPane.rowIndex="7" GridPane.columnIndex="1"/>
+
+    <Label text="Início do Desconto (dias antes):" GridPane.rowIndex="8" GridPane.columnIndex="0"/>
+    <TextField fx:id="descontoInicioField" GridPane.rowIndex="8" GridPane.columnIndex="1"/>
+
+    <Label text="Desconto Diário (%):" GridPane.rowIndex="9" GridPane.columnIndex="0"/>
+    <TextField fx:id="descontoDiarioField" GridPane.rowIndex="9" GridPane.columnIndex="1"/>
+
+    <!-- Botões de ação na parte inferior -->
+    <GridPane GridPane.rowIndex="10" GridPane.columnIndex="0" GridPane.columnSpan="2">
+        <columnConstraints>
+            <ColumnConstraints hgrow="ALWAYS"/>
+            <ColumnConstraints hgrow="ALWAYS"/>
+        </columnConstraints>
+
+        <!-- Excluir no canto inferior esquerdo -->
+        <HBox spacing="10" alignment="CENTER_LEFT" GridPane.rowIndex="0" GridPane.columnIndex="0">
+            <Button text="Excluir" fx:id="excluirBtn" styleClass="button-green"/>
+        </HBox>
+
+        <!-- Alterar no canto inferior direito -->
+        <HBox spacing="10" alignment="CENTER_RIGHT" GridPane.rowIndex="0" GridPane.columnIndex="1">
+            <Button text="Alterar" fx:id="alterarBtn" styleClass="button-green"/>
+        </HBox>
+    </GridPane>
+
+    <!-- Mensagem de feedback -->
+    <Label fx:id="mensagemLabel" GridPane.rowIndex="11" GridPane.columnIndex="0" GridPane.columnSpan="2"
+           style="-fx-text-fill: red;" GridPane.halignment="CENTER"/>
+
+</GridPane>

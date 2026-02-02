@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.hortifacil.controller.AdminAssinaturaController"
+      spacing="15" alignment="TOP_LEFT"
+      styleClass="root-pane"
+      stylesheets="@/css/style.css"
+      prefWidth="800" prefHeight="600">
+
+    <padding>
+        <Insets top="10" right="10" bottom="10" left="10"/>
+    </padding>
+
+    <!-- Cabeçalho com botão Voltar e título -->
+    <HBox spacing="10" alignment="CENTER" prefWidth="700">
+        <Button text="Voltar" fx:id="btnVoltar" onAction="#voltarAssinatura" styleClass="button-exit"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Label text="Assinaturas disponíveis" styleClass="title-label"/>
+        <Region HBox.hgrow="ALWAYS"/>
+    </HBox>
+
+    <!-- Linha de ação: Nova Assinatura -->
+    <HBox spacing="10" alignment="CENTER_RIGHT" prefWidth="700">
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button text="Nova Assinatura" onAction="#abrirNovaAssinatura" styleClass="button-green"/>
+    </HBox>
+
+    <!-- Seleção e ações do plano -->
+    <HBox spacing="10" alignment="CENTER_LEFT" prefWidth="700">
+        <ComboBox fx:id="comboPlanos" prefWidth="200" onAction="#mostrarDetalhesPlano"/>
+        <Button text="Editar" onAction="#abrirEditarAssinatura" styleClass="button-green"/>
+        <Button text="Excluir" onAction="#excluirAssinatura" styleClass="button-green"/>
+    </HBox>
+
+    <!-- Card do plano selecionado -->
+    <VBox fx:id="cardPlano" spacing="5" visible="false" 
+          style="-fx-border-color: gray; -fx-border-radius: 5; -fx-padding: 10;"
+          prefWidth="700">
+        <Label fx:id="lblNome" styleClass="card-title"/>
+        <Label fx:id="lblDescricao" styleClass="card-text"/>
+        <Label fx:id="lblValor" styleClass="card-text"/>
+        <Label fx:id="lblFrequencia" styleClass="card-text"/>
+        <Label fx:id="lblQuantidadeProdutos" styleClass="card-text"/>
+        <Label fx:id="lblUsuarios" styleClass="card-text"/>
+    </VBox>
+
+</VBox>

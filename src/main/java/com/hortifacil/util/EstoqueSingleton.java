@@ -1,6 +1,6 @@
 package com.hortifacil.util;
 
-import com.hortifacil.controller.AdicionarEstoqueController;
+import com.hortifacil.controller.AdminAdicionarEstoqueController;
 
 /**
  * Singleton para fornecer acesso global ao ControleEstoqueAdminController.
@@ -8,13 +8,13 @@ import com.hortifacil.controller.AdicionarEstoqueController;
  */
 public class EstoqueSingleton {
 
-    private static AdicionarEstoqueController instance;
+    private static AdminAdicionarEstoqueController instance;
 
-    public static void setInstance(AdicionarEstoqueController ctrl) {
+    public static void setInstance(AdminAdicionarEstoqueController ctrl) {
         instance = ctrl;
     }
 
-    public static AdicionarEstoqueController getInstance() {
+    public static AdminAdicionarEstoqueController getInstance() {
         if (instance == null) {
             throw new IllegalStateException("AdionarEstoqueController não foi inicializado");
         }

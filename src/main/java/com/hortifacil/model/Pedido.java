@@ -11,6 +11,16 @@ public class Pedido {
     private double total;
     private String status; // "EM_ANDAMENTO", "CANCELADO", "FINALIZADO"
     private boolean ativo;
+    private String metodoPagamento;
+    private double valorTotal; // ou calcule dinamicamente a partir dos itens do pedido
+
+    public double getValorTotal() {
+        return valorTotal;
+    }
+
+    public void setValorTotal(double valorTotal) {
+        this.valorTotal = valorTotal;
+}
 
     private List<CarrinhoProduto> itens;
 
@@ -91,6 +101,15 @@ public class Pedido {
     public void setItens(List<CarrinhoProduto> itens) {
         this.itens = itens;
     }
+
+    public String getMetodoPagamento() {
+    return metodoPagamento;
+    }
+
+    public void setMetodoPagamento(String metodoPagamento) {
+        this.metodoPagamento = metodoPagamento;
+    }
+
 
     @Override
     public String toString() {

@@ -15,7 +15,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        URL splashUrl = getClass().getResource("/view/SplashView.fxml");
+        URL splashUrl = getClass().getResource("/view/AppSplashView.fxml");
         System.out.println("URL SplashView carregada: " + splashUrl);
 
         if (splashUrl == null) {
@@ -43,21 +43,24 @@ public class Main extends Application {
     }
 
     private void openLogin(Stage stage) throws Exception {
-        URL loginUrl = getClass().getResource("/view/LoginView.fxml");
-        System.out.println("URL LoginView carregada: " + loginUrl);
+    URL loginUrl = getClass().getResource("/view/LoginView.fxml");
+    System.out.println("URL LoginView carregada: " + loginUrl);
 
-        if (loginUrl == null) {
-            throw new RuntimeException("LoginView.fxml não encontrado.");
-        }
-
-        Parent root = FXMLLoader.load(loginUrl);
-        Scene scene = new Scene(root);
-        scene.getStylesheets().add(getClass().getResource(CSS_PATH).toExternalForm());
-
-        stage.setScene(scene);
-        stage.setTitle("HortiFácil - Login");
-        stage.show();
+    if (loginUrl == null) {
+        throw new RuntimeException("LoginView.fxml não encontrado.");
     }
+
+    Parent root = FXMLLoader.load(loginUrl);
+    Scene scene = new Scene(root);
+    scene.getStylesheets().add(getClass().getResource(CSS_PATH).toExternalForm());
+
+    stage.setScene(scene);
+    stage.setTitle("HortiFácil - Login");
+
+    stage.centerOnScreen(); // <-- garante que centraliza
+    stage.show();
+}
+
 
     public static void main(String[] args) {
         launch(args);

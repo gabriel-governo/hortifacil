@@ -11,13 +11,13 @@ import java.util.List;
 public class CarrinhoDAO {
 
     // Adiciona um item no carrinho (ou atualiza quantidade se já existir)
-    public boolean adicionarOuAtualizarItem(int idCliente, CarrinhoProduto item) {
+    public boolean adicionarOuAtualizarItem(int idCliente, CarrinhoProduto item, boolean somarQuantidade) {
         String sqlCheck = "SELECT quantidade FROM carrinho_produto WHERE id_cliente = ? AND id_produto = ?";
         String sqlInsert = "INSERT INTO carrinho_produto (id_cliente, id_produto, quantidade, preco_unitario) VALUES (?, ?, ?, ?)";
         String sqlUpdate = "UPDATE carrinho_produto SET quantidade = ?, preco_unitario = ? WHERE id_cliente = ? AND id_produto = ?";
 
         try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmtCheck = conn.prepareStatement(sqlCheck)) {
+            PreparedStatement stmtCheck = conn.prepareStatement(sqlCheck)) {
 
             stmtCheck.setInt(1, idCliente);
             stmtCheck.setInt(2, item.getProduto().getId());
@@ -27,7 +27,9 @@ public class CarrinhoDAO {
             if (rs.next()) {
                 // Item existe, atualizar quantidade
                 int quantidadeAtual = rs.getInt("quantidade");
-                int novaQuantidade = quantidadeAtual + item.getQuantidade();
+                int novaQuantidade = somarQuantidade
+                        ? quantidadeAtual + item.getQuantidade() // soma ao existente
+                        : item.getQuantidade();                  // substitui
 
                 try (PreparedStatement stmtUpdate = conn.prepareStatement(sqlUpdate)) {
                     stmtUpdate.setInt(1, novaQuantidade);
@@ -136,6 +138,5 @@ public class CarrinhoDAO {
             return false;
         }
     }
-
     
 }

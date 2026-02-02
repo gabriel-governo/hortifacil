@@ -28,5 +28,14 @@ public interface ProdutoEstoqueDAO {
 
     List<ProdutoEstoque> buscarLotesPorProdutoOrdenados(int idProduto) throws SQLException;
 
-      int somarQuantidadePorProduto(int idProduto) throws SQLException;
+    int somarQuantidadePorProduto(int idProduto) throws SQLException;
+
+    int buscarUltimoLote(int idProduto) throws SQLException;
+
+    ProdutoEstoque buscarPorId(int idLote) throws SQLException;
+
+    int buscarQuantidade(int idProduto) throws SQLException;
+
+    boolean atualizarQuantidade(int idProduto, int novaQuantidade) throws SQLException;
+
 }
